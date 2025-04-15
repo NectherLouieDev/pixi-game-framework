@@ -34,7 +34,7 @@ export class BasicFPS
         if (delta >= 1000)
         {
             this.fps = Math.round((this.frameCount * 1000) / delta);
-            this.fpsText.text = `FPS: ${this.fps}`;
+            this.fpsText.text = "FPS: " + this.fps;
             this.frameCount = 0;
             this.lastTime = now;
         }

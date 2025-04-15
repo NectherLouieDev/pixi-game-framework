@@ -11,7 +11,6 @@ export class PhoenixFlameScene extends Scene
     private _particleContainer!: Container;
     private _maxParticles = 10;
     private _particleTextures: Texture[] = [];
-    private _animationLoop!: number;
 
     public async create(): Promise<void>
     {
@@ -48,7 +47,7 @@ export class PhoenixFlameScene extends Scene
         this.addChild(this._particleContainer);
         
         // this.addChild(new Sprite(this._loader.getTexture("particle1")))
-        // List for update
+        // Listen for update
         this._game.updateSignal.connect(this.updateParticles.bind(this));
 
         // Menu Button
@@ -144,7 +143,8 @@ export class PhoenixFlameScene extends Scene
                 this._maxParticles - this._fireParticles.length
             );
             
-            for (let i = 0; i < particlesToAdd; i++) {
+            for (let i = 0; i < particlesToAdd; i++)
+            {
                 this.createParticle();
             }
         }
@@ -164,11 +164,10 @@ export class PhoenixFlameScene extends Scene
     {
         console.log("PH SCENE EXIT --------------------");
         
-        // Clean up particles and animation loop
-        clearInterval(this._animationLoop);
         this._fireParticles.forEach(particle => {
             gsap.killTweensOf(particle);
         });
+
         this._particleContainer.removeChildren();
         this._fireParticles = [];
 

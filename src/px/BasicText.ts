@@ -31,8 +31,4 @@ export class BasicText extends Text
             this.style.align = options.align;
         }
     }
-
-    public centerInContainer(width: number, height: number): void {
-        this.position.set(width / 2, height / 2);
-    }
 }

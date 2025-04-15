@@ -146,7 +146,7 @@ export class AssetLoader
         try
         {
             // Sad is having an error being fetched
-            // Sad is index 1
+            // Sad is index 0
             for (let i = 1; i < emojiData.length; ++i)
             {
                 const name = emojiData[i].name;

@@ -32,7 +32,9 @@ export class InteractiveText extends Text
 
         this.anchor.set(options.anchor?.x ?? 0.5, options.anchor?.y ?? 0.5);
 
-        if (options.hoverStyle) {
+        // Only works on desktop
+        if (options.hoverStyle)
+        {
             const hoverStyle = new TextStyle({
                 ...normalStyle,
                 ...options.hoverStyle
