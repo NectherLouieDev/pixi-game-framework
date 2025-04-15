@@ -1,4 +1,5 @@
 import { Scene } from "@core/Scene";
+import { BasicText } from "@px/BasicText";
 import { InteractiveText } from "@px/InteractiveText";
 import { Sprite } from "@px/Sprite";
 import gsap from "gsap";
@@ -26,6 +27,22 @@ export class AOSScene extends Scene
         
         this.position.set(1080 * 0.5, 1440 * 0.5);
 
+        // Title
+        const title = new BasicText("Ace Of Shadows", {
+            x: 0,
+            y: 400,
+            style: {
+                fontSize: 64,
+                fill: 0xffffff,
+                stroke: 0x000000,
+                strokeThickness: 8
+            },
+            anchor: { x: 0.5, y: 0.5 }
+        });
+        
+        this.addChild(title);
+
+        // Stacks
         this._stackPositions = [
             {x: -this._cardWidth + 100, y: 0},
             {x: -100, y: 0},
@@ -51,21 +68,17 @@ export class AOSScene extends Scene
             this.addChild(card);
         }
 
-        // Position stacks horizontally
-        for (let i = 0; i < this._stacks.length; ++i)
+        // Position initial stack;
+        const stackX = -2 * (this._cardWidth) - this._stackPositions[0].x;
+
+        for (let i = 0; i < mainStack.length; ++i)
         {
-            const stack = this._stacks[i];
-            const stackX = (i - 2) * (this._cardWidth) - this._stackPositions[0].x;
+            const card = mainStack[i];
 
-            for (let j = 0; j < stack.length; ++j)
-            {
-                const card = stack[j];
-
-                gsap.to(card, {
-                    x: stackX,
-                    duration: 0
-                })
-            }
+            gsap.to(card, {
+                x: stackX,
+                duration: 0
+            });
         }
 
         // Menu Button

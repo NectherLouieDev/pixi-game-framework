@@ -3,13 +3,18 @@ import { Scene } from "./Scene";
 import { Stage } from "./Stage";
 import { AOSScene } from "scenes/AOSScene";
 import { MagicWordsScene } from "scenes/MagicWordsScene";
-import { PheonixFlameScene } from "scenes/PheonixFlameScene";
+import { PhoenixFlameScene } from "scenes/PheonixFlameScene";
 import { AssetLoader } from "./AssetLoader";
+import { Ticker } from "pixi.js";
+import { Signal } from "typed-signals";
 
 export class Game
 {
+    public readonly updateSignal = new Signal<(dt: number) => void>();
+
     private _stage!: Stage;
     private _loader!: AssetLoader;
+    private _ticker!: Ticker;
 
     private _scenes: Record<string, Scene> = {};
     private _currentScene!: Scene;
@@ -18,15 +23,19 @@ export class Game
     {
         this._stage = stage;
         this._loader = loader;
+
+        this._ticker = Ticker.shared;
+        this._ticker.add((dt) => this.update(dt));
+        this._ticker.start();
     }
 
     public create(): void
     {
         // Create scenes
-        this.createScene("menu", new MenuScene(this._stage, this._loader));
-        this.createScene("aos", new AOSScene(this._stage, this._loader));
-        this.createScene("magicwords", new MagicWordsScene(this._stage, this._loader));
-        this.createScene("pheonixflame", new PheonixFlameScene(this._stage, this._loader));
+        this.createScene("menu", new MenuScene(this, this._stage, this._loader));
+        this.createScene("aos", new AOSScene(this, this._stage, this._loader));
+        this.createScene("magicwords", new MagicWordsScene(this, this._stage, this._loader));
+        this.createScene("pheonixflame", new PhoenixFlameScene(this, this._stage, this._loader));
         
         // Start menu scene
         this.changeScene("menu");
@@ -62,5 +71,10 @@ export class Game
         this._currentScene = this.getScene(name);
 
         this._currentScene.enter();
+    }
+
+    private update(dt: number): void
+    {
+        this.updateSignal.emit(dt);
     }
 }

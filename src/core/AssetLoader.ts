@@ -23,7 +23,27 @@ export interface IEmojiData
 export interface IEmojiConfig
 {
     name: string;
-    texture: Sprite;
+    sprite: Sprite;
+}
+
+export interface IAvatarData
+{
+    name: string;
+    url: string;
+    position: string;
+}
+
+export enum IAvatarPosition
+{
+    Left = "left",
+    Right = "right"
+}
+
+export interface IAvatarConfig
+{
+    name: string;
+    sprite: Sprite;
+    position: IAvatarPosition 
 }
 
 export interface ILoadProgressData 
@@ -45,6 +65,8 @@ export class AssetLoader
 
     private _emojiData: IEmojiData[] = [];
     private _emojis:  Record<string, IEmojiConfig> = {};
+
+    private _avatars:  Record<string, IAvatarConfig> = {};
 
     public addAssets(assets: IAssetConfig[]): void
     {
@@ -110,6 +132,8 @@ export class AssetLoader
             this.fetchEmojis(emojis);
 
             // Fetch Avatars
+            const avatars = data.avatars;
+            this.fetchAvatars(avatars);
         } 
         catch (error)
         {
@@ -122,6 +146,7 @@ export class AssetLoader
         try
         {
             // Sad is having an error being fetched
+            // Sad is index 1
             for (let i = 1; i < emojiData.length; ++i)
             {
                 const name = emojiData[i].name;
@@ -130,19 +155,46 @@ export class AssetLoader
                 const blob = await response.blob();
                 const base64Url = await this.blobToBase64(blob);
 
-                // const texture = await Assets.load(base64Url);
-                const texture = Texture.from(base64Url)
+                const texture = await Assets.load(base64Url);
+                // const texture = Texture.from(base64Url)
                 this._emojis[name] = {
                     name: name,
-                    texture: new Sprite(texture)
+                    sprite: new Sprite(texture)
                 };
-
-                this.dialogueFetchCompleteSignal.emit();
             }
         }
         catch(error)
         {
             this.errorSignal.emit("Error fetching emoji");
+        }
+    }
+
+    private async fetchAvatars(avatarData: IAvatarData[]): Promise<void>
+    {
+        try
+        {
+            for (let i = 0; i < avatarData.length; ++i)
+            {
+                const name = avatarData[i].name;
+                const url = avatarData[i].url;
+                const response = await fetch(url);
+                const blob = await response.blob();
+                const base64Url = await this.blobToBase64(blob);
+
+                const texture = await Assets.load(base64Url);
+
+                this._avatars[name] = {
+                    name: name,
+                    sprite: new Sprite(texture),
+                    position: avatarData[i].position as IAvatarPosition
+                };
+            }
+    
+            this.dialogueFetchCompleteSignal.emit();
+        }
+        catch
+        {
+            this.errorSignal.emit("Avatar fetchin failed");
         }
     }
 
@@ -156,8 +208,31 @@ export class AssetLoader
         });
     }
 
-    public getEmoji(name: string): Sprite
+    public getDialogue(): IDialogueConfig[]
     {
-        return this._emojis[name].texture;
+        return this._dialogue;
+    }
+
+    public getEmoji(name: string): Sprite|null
+    {
+        if (!this._emojis[name])
+            return null;
+
+        return this._emojis[name].sprite;
+    }
+
+    public getAvatar(name: string): Sprite
+    {
+        if (!this._avatars[name])
+            return this._avatars["Sheldon"].sprite;
+        return this._avatars[name].sprite;
+    }
+
+    public getAvatarPosition(name: string): string
+    {
+        if (!this._avatars[name])
+            return this._avatars["Sheldon"].position;
+
+        return this._avatars[name].position;
     }
 }

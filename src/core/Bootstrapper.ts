@@ -27,7 +27,10 @@ export class Bootstrapper
         loader.addAssets([
             { alias: "card-red", src: "/assets/card-red.png" },
             { alias: "card-green", src: "/assets/card-green.png" },
-            { alias: "card-blue", src: "/assets/card-blue.png" }
+            { alias: "card-blue", src: "/assets/card-blue.png" },
+            { alias: "particle1", src: "/assets/particle1.png" },
+            { alias: "particle2", src: "/assets/particle2.png" },
+            { alias: "particle3", src: "/assets/particle3.png" }
         ])
 
         loader.load();
@@ -47,10 +50,7 @@ export class Bootstrapper
     {
         console.log("All assets loaded successfully");
 
-        // Load diao=logue
-        this.createGame();
-
-        // this._loader.fetchDialogues();
+        this._loader.fetchDialogues();
     }
 
     private onDialogueFtechComplete(): void
