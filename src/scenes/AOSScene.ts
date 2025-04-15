@@ -13,11 +13,11 @@ export class AOSScene extends Scene
 {
     private _cards: Sprite[] = [];
     private _cardMaxCount = 144;
-    private _stacks: Sprite[][] = [[], [], [], []]; // 4 stacks
+    private _stacks: Sprite[][] = [[], [], [], []];
     private _moveInterval!: number;
     private _cardWidth = 200;
     private _cardHeight = 300;
-    private _cardOffset = 3; // Visual offset between cards
+    private _cardOffset = 3;
     private _stackPositions: IStackPosition[] = [];
 
     public create(): void
@@ -27,10 +27,10 @@ export class AOSScene extends Scene
         this.position.set(1080 * 0.5, 1440 * 0.5);
 
         this._stackPositions = [
-            {x: -this._cardWidth, y: 0},
-            {x: 0, y: 0},
-            {x: this._cardWidth, y: 0},
-            {x: this._cardWidth * 2, y: 0},
+            {x: -this._cardWidth + 100, y: 0},
+            {x: -100, y: 0},
+            {x: this._cardWidth - 100, y: 0},
+            {x: (this._cardWidth * 2) - 100, y: 0},
         ]
 
         let mainStack = this._stacks[0];
@@ -38,10 +38,9 @@ export class AOSScene extends Scene
         for (let i = 0; i < this._cardMaxCount; ++i)
         {
             const card = new Sprite(this._loader.getTexture('card-red'));
-            card.anchor.set(0.5);
             
             // Offset Y
-            card.x = 0;
+            card.x = this._stackPositions[0].x;
             card.y = -i * this._cardOffset;
             card.zIndex = i; // New card on top
             
@@ -56,7 +55,7 @@ export class AOSScene extends Scene
         for (let i = 0; i < this._stacks.length; ++i)
         {
             const stack = this._stacks[i];
-            const stackX = (i - 2) * (this._cardWidth);
+            const stackX = (i - 2) * (this._cardWidth) - this._stackPositions[0].x;
 
             for (let j = 0; j < stack.length; ++j)
             {
@@ -135,6 +134,7 @@ export class AOSScene extends Scene
 
     public enter(): void
     {
+        console.log("AOS SCENE ENTER --------------------");
         this.alpha = 0;
         gsap.to(this, {
             pixi: { alpha: 1 }, 
@@ -145,6 +145,7 @@ export class AOSScene extends Scene
 
     public exit(instant: boolean): void
     {
+        console.log("AOS SCENE EXIT ----------------");
         clearInterval(this._moveInterval);
 
         if (instant)

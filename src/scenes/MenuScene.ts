@@ -110,6 +110,7 @@ export class MenuScene extends Scene
 
     public enter(): void
     {
+        console.log("MENU SCENE ENTER --------------------");
         this.alpha = 0;
         gsap.to(this, {
             pixi: { alpha: 1 }, 
@@ -119,6 +120,7 @@ export class MenuScene extends Scene
 
     public exit(instant: boolean): void
     {
+        console.log("MENU SCENE EXIT --------------------");
         if (instant)
         {
             this.alpha = 0;
@@ -128,7 +130,8 @@ export class MenuScene extends Scene
             this.alpha = 1;
             gsap.to(this, {
                 pixi: { alpha: 0 }, 
-                duration: 1
+                duration: 1,
+                onComplete: () => { this.alpha = 0; }
             });
         }
     }

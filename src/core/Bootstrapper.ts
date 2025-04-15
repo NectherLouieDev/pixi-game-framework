@@ -22,6 +22,7 @@ export class Bootstrapper
         loader.errorSignal.connect(this.onError.bind(this));
         loader.progressSignal.connect(this.onProgress.bind(this));
         loader.loadCompleteSignal.connect(this.onComplete.bind(this));
+        loader.dialogueFetchCompleteSignal.connect(this.onDialogueFtechComplete.bind(this))
 
         loader.addAssets([
             { alias: "card-red", src: "/assets/card-red.png" },
@@ -31,8 +32,6 @@ export class Bootstrapper
 
         loader.load();
     }
-
-    
 
     private onProgress(data: ILoadProgressData): void
     {
@@ -48,6 +47,14 @@ export class Bootstrapper
     {
         console.log("All assets loaded successfully");
 
+        // Load diao=logue
+        this.createGame();
+
+        // this._loader.fetchDialogues();
+    }
+
+    private onDialogueFtechComplete(): void
+    {
         this.createGame();
     }
 
