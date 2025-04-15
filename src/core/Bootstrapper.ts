@@ -2,7 +2,6 @@ import { Assets, Container, Graphics } from "pixi.js";
 import { AssetLoader, ILoadProgressData } from "./AssetLoader";
 import { Stage } from "./Stage";
 import { Game } from "./Game";
-import { Sprite } from "@px/Sprite";
 
 export class Bootstrapper
 {
@@ -73,7 +72,7 @@ export class Bootstrapper
 
     private createGame(): void
     {
-        const game = new Game(this._stage);
+        const game = new Game(this._stage, this._loader);
         game.create();
     }
 }

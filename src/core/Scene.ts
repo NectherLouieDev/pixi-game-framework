@@ -1,14 +1,20 @@
 import { Container, DisplayObject } from "pixi.js";
 import { Stage } from "./Stage";
+import { Signal } from "typed-signals";
+import { AssetLoader } from "./AssetLoader";
 
 export class Scene extends Container<DisplayObject>
 {
-    protected _stage!: Stage;
+    public readonly sceneChangeSignal = new Signal<(from: string, to: string) => void>();
 
-    constructor(stage: Stage)
+    protected _stage!: Stage;
+    protected _loader!: AssetLoader;
+
+    constructor(stage: Stage, loader: AssetLoader)
     {
         super();
         this._stage = stage;
+        this._loader = loader;
     }
 
     public create(): void
@@ -19,7 +25,7 @@ export class Scene extends Container<DisplayObject>
     {
     }
 
-    public exit(): void
+    public exit(instant: boolean): void
     {
     }
 }

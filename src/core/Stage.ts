@@ -1,5 +1,9 @@
 import { Application, Container, DisplayObject, ICanvas, IRenderer } from 'pixi.js';
 import { BasicFPS } from './BasicFPS';
+import { Signal } from 'typed-signals';
+import * as PIXI from "pixi.js";
+import gsap from "gsap";
+import { PixiPlugin } from "gsap/PixiPlugin";
 
 /**
  * @class Stage
@@ -7,6 +11,8 @@ import { BasicFPS } from './BasicFPS';
  */
 export class Stage
 {
+    public readonly resizeSignal = new Signal<(a: number, b: number, c: number, d: boolean) => void>();
+
     private _app: Application;
     private _renderer: IRenderer<ICanvas>;
     private _view: ICanvas | HTMLCanvasElement;
@@ -46,8 +52,9 @@ export class Stage
         this.setupResizeHandler();
         this.resize();
 
-        const view = this._view as HTMLCanvasElement;
-        view.requestFullscreen();
+        // register the gsap plugin
+        gsap.registerPlugin(PixiPlugin);
+        PixiPlugin.registerPIXI(PIXI);
     }
 
     private setupResizeHandler(): void
@@ -65,8 +72,6 @@ export class Stage
 
     private resize(): void
     {
-        
-        
         const windowWidth = window.innerWidth;
         const windowHeight = window.innerHeight;
         const designRatio = this._designWidth / this._designHeight;
@@ -97,7 +102,9 @@ export class Stage
         this._gameScale = Math.min(newWidth / this._designWidth, newHeight / this._designHeight);
         
         // Update stage scale
-        this._stageContainer.scale.set(this._gameScale);
+        // this._stageContainer.scale.set(this._gameScale);
+
+        this.resizeSignal.emit(newWidth, newHeight, this._gameScale, this._portrait);
     }
 
     public addScene(child: Container<DisplayObject>): void
