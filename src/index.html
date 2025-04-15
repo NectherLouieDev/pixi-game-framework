@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>TEST</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background: #000; /* For letterboxing areas */
+    }
+    
+    #game-container {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+    
+    canvas {
+      max-width: 100vw;
+      max-height: 100vh;
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <div id="game-container">
+    <!-- Canvas will be inserted here by PIXI -->
+  </div>
+  <!-- Webpack injects main.js here -->
+</body>
+</html>

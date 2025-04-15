@@ -1,0 +1,22 @@
+{
+    "compilerOptions": {
+      "target": "ES6",
+      "module": "ESNext",
+      "moduleResolution": "node",
+      "outDir": "./dist",
+      "rootDir": "./src",
+      "noImplicitAny": true,
+      "strict": true,
+      "esModuleInterop": true,
+      "skipLibCheck": true,
+      "forceConsistentCasingInFileNames": true,
+      "sourceMap": true,
+      "baseUrl": "./src",
+      "paths": {
+        "@core/*": ["core/*"],
+        "@px/*": ["px/*"]
+      }
+    },
+    "include": ["src/**/*.ts"],
+    "exclude": ["node_modules", "dist"]
+  }
