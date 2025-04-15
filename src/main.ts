@@ -1,4 +1,4 @@
-import { Core } from "./core";
+import { Bootstrapper } from "@core/Bootstrapper";
 
-const bootstrapper = new Core.Bootstrapper();
+const bootstrapper = new Bootstrapper();
 bootstrapper.start();

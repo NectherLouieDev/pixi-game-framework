@@ -1,6 +1,7 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
+const CopyPlugin = require('copy-webpack-plugin');
 
 module.exports = {
   entry: './src/main.ts',
@@ -22,6 +23,13 @@ module.exports = {
         test: /\.css$/,
         use: ['style-loader', 'css-loader'],
       },
+      {
+        test: /\.(png|jpg|jpeg|gif|svg)$/i,
+        type: 'asset/resource',
+        generator: {
+          filename: 'assets/[name][ext][query]'
+        }
+      }
     ],
   },
   resolve: {
@@ -29,7 +37,8 @@ module.exports = {
     extensions: ['.tsx', '.ts', '.js'],
     alias: {
         '@core': path.resolve(__dirname, 'src/core/index.ts'),
-        '@px': path.resolve(__dirname, 'src/px/index.ts')
+        '@px': path.resolve(__dirname, 'src/px/index.ts'),
+        '@scenes': path.resolve(__dirname, 'src/px/index.ts')
     }
   },
   plugins: [
@@ -37,6 +46,18 @@ module.exports = {
       template: './src/index.html',
       filename: 'index.html',
     }),
+    new CopyPlugin({
+      patterns: [
+        { 
+          from: 'assets', 
+          to: 'assets',
+          noErrorOnMissing: true,
+          globOptions: {
+            ignore: ['**/*.psd', '**/*.ai']
+          }
+        }
+      ]
+    })
   ],
   devServer: {
     static: {

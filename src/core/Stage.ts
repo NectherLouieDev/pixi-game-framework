@@ -1,4 +1,5 @@
 import { Application, Container, DisplayObject, ICanvas, IRenderer } from 'pixi.js';
+import { BasicFPS } from './BasicFPS';
 
 /**
  * @class Stage
@@ -9,7 +10,7 @@ export class Stage
     private _app: Application;
     private _renderer: IRenderer<ICanvas>;
     private _view: ICanvas | HTMLCanvasElement;
-    private _stage: Container<DisplayObject>;
+    private _stageContainer: Container<DisplayObject>;
     private _gameScale: number = 1;
 
     private _gameContainer: HTMLDivElement;
@@ -33,15 +34,20 @@ export class Stage
             autoDensity: true
         });
 
+        new BasicFPS(this._app);
+
         this._renderer = this._app.renderer;
         this._view = this._renderer.view;
-        this._stage = this._app.stage;
+        this._stageContainer = this._app.stage;
 
         this._gameContainer = document.getElementById('game-container') as HTMLDivElement;
         this._gameContainer.appendChild(this._view as HTMLCanvasElement);
 
         this.setupResizeHandler();
         this.resize();
+
+        const view = this._view as HTMLCanvasElement;
+        view.requestFullscreen();
     }
 
     private setupResizeHandler(): void
@@ -59,6 +65,8 @@ export class Stage
 
     private resize(): void
     {
+        
+        
         const windowWidth = window.innerWidth;
         const windowHeight = window.innerHeight;
         const designRatio = this._designWidth / this._designHeight;
@@ -85,9 +93,20 @@ export class Stage
         // Apply calculated dimensions
         this._view.style!.width = `${newWidth}px`;
         this._view.style!.height = `${newHeight}px`;
+
+        this._gameScale = Math.min(newWidth / this._designWidth, newHeight / this._designHeight);
         
         // Update stage scale
-        this._gameScale = Math.min(newWidth / this._designWidth, newHeight / this._designHeight);
-        this._stage.scale.set(this._gameScale);
+        this._stageContainer.scale.set(this._gameScale);
+    }
+
+    public addScene(child: Container<DisplayObject>): void
+    {
+        this._stageContainer.addChild(child);
+    }
+
+    public getGameScale(): number
+    {
+        return this._gameScale;
     }
 }
